@@ -1,3 +1,4 @@
+from sklearn.ensemble import BaggingClassifier
 from sklearn.model_selection import cross_val_score
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,12 +16,9 @@ print 'loaded X'
 y = np.genfromtxt('../../contest_data/train.csv', delimiter=',')[1:,-1]
 print 'loaded y'
 
-svc=SVC(C=1,gamma='auto')
-scores = cross_val_score(svc, X, y,scoring='f1_micro',cv=5,verbose=5)
-print scores.mean()
-
-pca = PCA(n_components=1000)
-X_pca = pca.fit(X).transform(X)
-svc=SVC(C=1,gamma='auto')
-scores = cross_val_score(svc, X_pca, y,scoring='f1_micro',cv=5,verbose=5)
+svc=SVC(C=1,gamma='auto',verbose=1)
+bag=BaggingClassifier(base_estimator=svc, n_estimators=10, max_samples=1.0, 
+	max_features=0.2, bootstrap=True, bootstrap_features=False, oob_score=False, 
+	warm_start=False, n_jobs=1, random_state=0, verbose=1)
+scores = cross_val_score(bag, X, y,scoring='f1_micro',cv=5,verbose=5)
 print scores.mean()

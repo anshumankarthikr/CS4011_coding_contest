@@ -6,6 +6,7 @@ from sklearn.neighbors.kde import KernelDensity
 xtrain = np.genfromtxt('../../contest_data/train.csv', delimiter=',')[1:,1:-1]
 ytrain = np.genfromtxt('../../contest_data/train.csv', delimiter=',')[1:,-1]
 ytrain=np.asmatrix(ytrain).T
+xtrain_linear_imputed=np.genfromtxt('../../contest_data/xtrain_linear_imputed.csv', delimiter=',')
 
 #imputing by sampling from class conditioned density estimate
 #class conditional density estimate of column 1
@@ -21,7 +22,7 @@ for k in range(500):
 		kde = KernelDensity(kernel='gaussian', bandwidth=0.1).fit(X[ind[0]])
 		nans_i=np.isnan(xtrain[:,k])*np.array((ytrain==float(i)).T)
 		xtrain[nans_i[0],k]=np.array(kde.sample(sum(nans_i[0]),random_state=0).T)
-		#log_dens = kde.score_samples(X_plot)
+		log_dens = kde.score_samples(X_plot)
 		#dens=np.exp(log_dens)
 		#plt.plot(X_plot,dens)
 	#plt.show()
