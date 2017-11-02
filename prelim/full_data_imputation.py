@@ -28,10 +28,10 @@ for i  in range(500):
 	print i
 	missings=np.isnan(xtrain[:,i])
 	nonmissings=~missings
-	xtrain[missings,i]=lin.fit(X_pca[nonmissings,:],xtrain[nonmissings,i]).predict(X_pca[missings,:])
+	xtrain[missings,i]=lin.fit(xtrain[nonmissings,500:],xtrain[nonmissings,i]).predict(xtrain[missings,500:])
 	#scores = cross_val_score(lin, X_pca[nonmissings,:], xtrain[nonmissings,i],scoring='neg_mean_absolute_error',cv=5,verbose=0)
 	#print scores
-
+np.savetxt('../../contest_data/xtest_linear_imputed.csv',xtrain,delimiter=',')
 
 #decision trees
 xtrain = np.genfromtxt('../../contest_data/train.csv', delimiter=',')[1:,1:-1]
@@ -92,3 +92,13 @@ for i  in range(2):
 	print 'best parameters: ',mod.best_estimator_
 
 '''
+
+for i  in range(500):
+	print i
+	train_missings=np.isnan(xtrain[:,i])
+	train_nonmissings=~train_missings
+	test_missings=np.isnan(xtest[:,i])
+	test_nonmissings=~test_missings
+	xtest[test_missings,i]=lin.fit(xtrain[train_nonmissings,500:],xtrain[train_nonmissings,i]).predict(xtest[test_missings,500:])
+
+np.savetxt('../../contest_data/xtest_linear_imputed.csv',xtest,delimiter=',')
