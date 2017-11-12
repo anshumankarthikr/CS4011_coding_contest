@@ -22,7 +22,7 @@ pca = PCA(n_components=300)
 X_pca = pca.fit(X).transform(X)
 
 et = ExtraTreesClassifier(n_estimators=1000, max_depth=None, random_state=0,verbose=0)
-svc=SVC(C=1,gamma='auto',verbose=0)
+svc=SVC(C=100,gamma='auto',verbose=0)
 #dt = DecisionTreeClassifier(min_samples_leaf=5,random_state=0)
 rf = RandomForestClassifier(n_estimators=1000, max_depth=None, random_state=0,verbose=0)
 lr = LogisticRegression()

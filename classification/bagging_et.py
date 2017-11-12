@@ -8,6 +8,7 @@ from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.model_selection import GridSearchCV
+from sklearn.naive_bayes import GaussianNB
 import  pickle
 
 X = np.genfromtxt('../../contest_data/xtrain_linear_imputed.csv', delimiter=',')
@@ -29,7 +30,6 @@ trees 	estims 	f1
 300		20		
 150		50		
 '''
-
 
 
 
@@ -69,6 +69,47 @@ for tree in [150,300,500,1000]:
 		pickle.dump(bag,open('bagging_et/tr'+str(tree)+'bg'+str(est)+'.pkl','w'))
 
 
+
+
+
+svc = SVC(C=100)
+bag=BaggingClassifier(base_estimator=svc, n_estimators=50, max_samples=1.0, 
+	max_features=1.0, bootstrap=True, bootstrap_features=False, oob_score=False, 
+	warm_start=True, n_jobs=-1, random_state=0, verbose=1)
+scores = cross_val_score(bag, X, y,scoring='f1_micro',cv=5,verbose=5)
+print scores.mean()
+
+'''
+C 		estims 		f1
+1000	50			35.7
+100		100			36
+100		50			35.3
+'''
+
+
+pca = PCA(n_components=1400)
+X_pca = pca.fit(X).transform(X)
+svc = SVC(C=1000)
+bag=BaggingClassifier(base_estimator=svc, n_estimators=50, max_samples=1.0, 
+	max_features=1.0, bootstrap=True, bootstrap_features=False, oob_score=False, 
+	warm_start=False, n_jobs=-1, random_state=0, verbose=1)
+scores = cross_val_score(bag, X_norm, y,scoring='f1_micro',cv=4,verbose=5,n_jobs=-1)
+print scores.mean()
+
+a=[]
+for i in [10,20,50,100,500]:
+	gnb = GaussianNB()
+	bag=BaggingClassifier(base_estimator=gnb, n_estimators=20, max_samples=1.0, 
+		max_features=1.0, bootstrap=True, bootstrap_features=False, oob_score=False, 
+		warm_start=False, n_jobs=1, random_state=0, verbose=1)
+	scores = cross_val_score(bag, X, y,scoring='f1_micro',cv=4,verbose=5,n_jobs=-1)
+	print scores.mean()
+	a.append(scores.mean())
+plt.plot([10,20,50,100,500],a)
+plt.xlabel('number of estimators')
+plt.ylabel('f1')
+plt.title('number of estimators in bagging vs f1 score')
+plt.savefig('bayes_bags.png')
 
 
 

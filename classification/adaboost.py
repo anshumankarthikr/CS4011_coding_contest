@@ -51,9 +51,9 @@ ada = AdaBoostClassifier(
 scores = cross_val_score(ada, X, y,scoring='f1_micro',cv=5,verbose=5,n_jobs=1)
 
 ada = AdaBoostClassifier(
-    MultinomialNB(),
-    n_estimators=100,
+    GaussianNB(),
+    n_estimators=1000,
     learning_rate=1,
     random_state=0,algorithm='SAMME')
-scores = cross_val_score(ada, X, y,scoring='f1_micro',cv=5,verbose=5,n_jobs=1)
+scores = cross_val_score(ada, X, y,scoring='f1_micro',cv=10,verbose=5,n_jobs=1)
 

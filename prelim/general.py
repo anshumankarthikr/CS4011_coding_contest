@@ -9,7 +9,7 @@ import pickle
 
 X = np.genfromtxt('../../contest_data/train.csv', delimiter=',')[1:,501:-1]
 y = np.genfromtxt('../../contest_data/train.csv', delimiter=',')[1:,-1]
-
+X_= np.genfromtxt('../../contest_data/xtrain_density_imputed.csv', delimiter=',')
 X_full=np.genfromtxt('../../contest_data/train.csv', delimiter=',')[1:,1:-1]
 #logreg baseline
 
@@ -25,10 +25,10 @@ rfecv.fit(X, y)
 plt.figure()
 plt.xlabel("Number of features selected")
 plt.ylabel("Cross validation f1 score")
-plt.title('f1 vs dropped features (logreg)')
-plt.plot([0]+range(100,2200,200), rfecv.grid_scores_)
+plt.title('f1 vs dropped features (SVM)')
+plt.plot([0]+range(100,2200,500), rfecv.grid_scores_)
 #plt.show()
-plt.savefig('logreg/logreg_dropped_features.png')
+plt.savefig('../prelim/dropped_unimputed.png')
 
 #saving stats
 pickle.dump(rfecv,open('logreg/model.pkl','w'))
@@ -48,7 +48,7 @@ for train_index, test_index in skf.split(X, y):
 
 #linear SVM
 svc = SVC(kernel="linear")
-rfecv = RFECV(estimator=svc, step=200, cv=StratifiedKFold(3),
+rfecv = RFECV(estimator=svc, step=500, cv=StratifiedKFold(3),
               scoring='f1_micro',verbose=1,)
 rfecv.fit(X, y)
 
@@ -156,9 +156,6 @@ for train_index, test_index in skf.split(X, y):
 	print '######################'
 	break
 #print scores
-
-
-
 
 
 skf = StratifiedKFold(n_splits=5)
