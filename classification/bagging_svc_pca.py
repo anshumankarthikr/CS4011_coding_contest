@@ -10,6 +10,8 @@ from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.model_selection import GridSearchCV
+from sklearn.decomposition import PCA
+
 
 X = np.genfromtxt('../../contest_data/xtrain_linear_imputed.csv', delimiter=',')
 print 'loaded X'
@@ -17,12 +19,14 @@ y = np.genfromtxt('../../contest_data/train.csv', delimiter=',')[1:,-1]
 print 'loaded y'
 
 svc=SVC(C=100,gamma='auto',verbose=0)
+pca = PCA=(n_components=1000)
+X_pca = pca.fit_transform(X)
 
 bag=BaggingClassifier(base_estimator=svc, n_estimators=100, max_samples=1.0, 
 	max_features=0.2, bootstrap=True, bootstrap_features=False, oob_score=False, 
 	warm_start=False, n_jobs=1, random_state=0, verbose=1)
 
-scores = cross_val_score(bag, X, y,scoring='f1_micro',cv=5,verbose=5)
+scores = cross_val_score(bag, X_pca, y,scoring='f1_micro',cv=5,verbose=5)
 
 
 print scores.mean()

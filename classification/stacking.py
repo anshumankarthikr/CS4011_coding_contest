@@ -22,7 +22,11 @@ pca = PCA(n_components=300)
 X_pca = pca.fit(X).transform(X)
 
 et = ExtraTreesClassifier(n_estimators=1000, max_depth=None, random_state=0,verbose=0)
+<<<<<<< HEAD
 svc=SVC(C=100,gamma='auto',verbose=0)
+=======
+s = 
+>>>>>>> 49831488d6f088a22fb3538a8b8734a57b6ef1dd
 #dt = DecisionTreeClassifier(min_samples_leaf=5,random_state=0)
 rf = RandomForestClassifier(n_estimators=1000, max_depth=None, random_state=0,verbose=0)
 lr = LogisticRegression()
@@ -32,3 +36,7 @@ sclf = StackingClassifier(classifiers=[et, svc,rf],
                           meta_classifier=lr)
 scores = cross_val_score(bag, X, y,scoring='f1_micro',cv=5,verbose=5,n_jobs=-1)
 print scores
+
+
+
+

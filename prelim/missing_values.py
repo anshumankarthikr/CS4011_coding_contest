@@ -3,12 +3,12 @@
 import pandas as pd 
 import numpy as np
 import math  
-from sklearn import tree 
+from sklearn.linear_model import LinearRegression
 
 # Impas_matorting Datasets
 
-X_train = pd.read_csv('../contest_data/train.csv')
-X_test = pd.read_csv('../contest_data/test.csv')
+X_train = pd.read_csv('../../contest_data/train.csv')
+X_test = pd.read_csv('../../contest_data/test.csv')
 
 # Slicing and Dicing the Dataset
 
@@ -26,10 +26,10 @@ for column in X_train_missing:
 	impute_X_train = impute_X_train.drop([column], axis=1)
 	impute_X_predict = impute_X[impute_X[column].isin([np.nan])]
 	impute_X_predict = impute_X_predict.drop([column],axis=1)
-	clf = tree.DecisionTreeRegressor()
+	clf = LinearRegression()
 	clf = clf.fit(impute_X_train, impute_y_train)
 	impute_y_predict = clf.predict(impute_X_predict)
-	impute_add.append(impute_y_predict)
+	impute_add.append
 
 X_train_matrix = X_train.as_matrix()
 X_train_matrix = X_train_matrix.T[1:]
@@ -43,4 +43,4 @@ for i in range(len(X_train_matrix)):
 
 X_train_matrix = X_train_matrix.T
 X_train_matrix = pd.DataFrame(X_train_matrix)
-X_train_matrix.to_csv('../contest_data/train_desicion_tree_impute.csv')
+X_train_matrix.to_csv('../contest_data/train_linreg_impute.csv')
