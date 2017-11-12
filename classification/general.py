@@ -47,7 +47,7 @@ for train_index, test_index in skf.split(X, y):
 
 
 #linear SVM
-svc = SVC(kernel="linear",C=100)
+svc = SVC(kernel="linear")
 rfecv = RFECV(estimator=svc, step=200, cv=StratifiedKFold(3),
               scoring='f1_micro',verbose=1,)
 rfecv.fit(X, y)
@@ -139,7 +139,7 @@ print scores
 
 #XGBOOST
 from xgboost import XGBClassifier
-model = XGBClassifier(objective='f1_micro',max_depth=None)
+model = XGBClassifier(objective='f1_micro',silent=False,max_depth=3)
 #scores = cross_val_score(model, X_full, y,scoring='f1_micro',cv=5,verbose=5)
 scores=[]
 skf = StratifiedKFold(n_splits=5)
@@ -147,7 +147,7 @@ for train_index, test_index in skf.split(X, y):
 	X_train, X_test = X[train_index], X[test_index]
 	y_train, y_test = y[train_index], y[test_index]
 	eval_set = [(X_test, y_test)]
-	model = XGBClassifier(objective='f1_micro',max_depth=3,learning_rate=0.5,reg_lambda=1,colsample_bytree = 0.5)
+	model = XGBClassifier(objective='f1_micro',max_depth=None,learning_rate=0.5,reg_lambda=1,colsample_bytree = 0.5,random_seed=1)
 	model.fit(X_train, y_train, eval_set=eval_set, early_stopping_rounds=10,verbose=True)
 	y_pred = model.predict(X_test, ntree_limit=model.best_ntree_limit)
 	scores.append(f1_score(y_test, y_pred,average='micro'))
@@ -208,15 +208,7 @@ kpca = KPCA(gamma=1.0, n_components=700)
 kpca.fit(X)
 X_kpca = kpca.fit(X).transform(X)
 et = ExtraTreesClassifier(n_estimators=500, max_depth=None, random_state=0,verbose=5)
-scores = cross_val_score(et, X_pca, y,scoring='f1_micro',cv=4,verbose=5,n_jobs=-1)
+scores = cross_val_score(et, X_pca, y,scoring='f1_micro',cv=5,verbose=5)
 print scores.mean()
-
-
-# Feature Selection Based on the Performance of the Classifier
-
-
-
-xgb = XGBClassifier(objective='f1_micro',max_depth=3,learning_rate=0.5,reg_lambda=1,colsample_bytree = 0.5)
-xgb.fit(X, y,  early_stopping_rounds=10,verbose=True)
 
 

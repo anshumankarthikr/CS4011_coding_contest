@@ -14,32 +14,37 @@ from sklearn.tree import DecisionTreeClassifier
 from mlxtend.classifier import StackingClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.naive_bayes import MultinomialNB
+import sklearn.preprocessing as preproc
+from sklearn.model_selection import GridSearchCV
+import pandas as pd
 
 
 X = np.genfromtxt('../../contest_data/xtrain_linear_imputed.csv', delimiter=',')
 print 'loaded X'
 y = np.genfromtxt('../../contest_data/train.csv', delimiter=',')[1:,-1]
 print 'loaded y'
+X_test = np.genfromtxt('../../contest_data/xtest_linear_imputed.csv', delimiter=',')
+print 'loaded X_test' 
+
+X_scale = preproc.scale(X)
+X_test_scale = preproc.scale(X_test)
 
 
-pca = PCA(n_components=300)
-X_pca = pca.fit(X).transform(X)
 ada = AdaBoostClassifier(
     DecisionTreeClassifier(max_depth=1),
     n_estimators=100,
     learning_rate=1,
     random_state=0)
-scores = cross_val_score(ada, X_pca, y,scoring='f1_micro',cv=5,verbose=5,n_jobs=1)
+scores = cross_val_score(ada, X, y,scoring='f1_micro',cv=5,verbose=5,n_jobs=-1)
 
 #22%
-
 
 ada = AdaBoostClassifier(
     Perceptron(),
     n_estimators=100,
     learning_rate=1,
     random_state=0,algorithm='SAMME')
-scores = cross_val_score(ada, X, y,scoring='f1_micro',cv=5,verbose=5,n_jobs=1)
+scores = cross_val_score(ada, X, y,scoring='f1_micro',cv=5,verbose=5,n_jobs=-1)
 
 
 
@@ -48,12 +53,12 @@ ada = AdaBoostClassifier(
     n_estimators=100,
     learning_rate=1,
     random_state=0,algorithm='SAMME')
-scores = cross_val_score(ada, X, y,scoring='f1_micro',cv=5,verbose=5,n_jobs=1)
+scores = cross_val_score(ada, X, y,scoring='f1_micro',cv=5,verbose=5,n_jobs=-1)
 
 ada = AdaBoostClassifier(
     MultinomialNB(),
     n_estimators=100,
     learning_rate=1,
     random_state=0,algorithm='SAMME')
-scores = cross_val_score(ada, X, y,scoring='f1_micro',cv=5,verbose=5,n_jobs=1)
+scores = cross_val_score(ada, X, y,scoring='f1_micro',cv=5,verbose=5,n_jobs=-1)
 
